@@ -9,13 +9,12 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/btShowMovieDetails"
+        android:id="@+id/bt_show_movie_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:text="@string/button_show_movie_details"
-        android:textAllCaps="false">
-    </Button>
+        android:textAllCaps="false"/>
 
 </LinearLayout>
