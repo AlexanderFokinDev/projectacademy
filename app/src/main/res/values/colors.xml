@@ -7,4 +7,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="background_dark">#191926</color>
+
+    <color name="rating_star_filled">#FF3365</color>
+    <color name="rating_star_empty">#6D6D80</color>
+
+    <color name="text_light">#ECECEC</color>
+    <color name="text_gray">#6D6D80</color>
+    <color name="text_red">#FF3466</color>
+    <color name="text_light_gray">#C4C4C4</color>
+    <color name="text_almost_white">#D8D8D8</color>
+
 </resources>
