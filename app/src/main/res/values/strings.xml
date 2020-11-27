@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">project academy</string>
 
-    <!--Activity movie details-->
+    <!--Fragment movie details-->
     <string name="title_activity_movie_details">Movie details</string>
     <string name="name_actor1">Robert Downey Jr.</string>
     <string name="name_actor2">Chris Evans</string>
@@ -16,7 +16,12 @@
         more in order to reverse Thanos\' actions and restore balance to the universe.</string>
     <string name="minimum_age">13+</string>
     <string name="movie_name">Avengers:\nEnd Game</string>
+    <string name="movie_name_without_ln">Avengers: End Game</string>
     <string name="movie_tag">Action, Adventure, Fantasy</string>
     <string name="movie_review">125 Reviews</string>
+
+    <!--Fragment movies list-->
+    <string name="title_movies_list">Movies list</string>
+    <string name="movie_time">137 min</string>
 
 </resources>
