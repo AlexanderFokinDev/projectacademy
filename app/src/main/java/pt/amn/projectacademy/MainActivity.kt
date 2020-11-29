@@ -29,10 +29,7 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.MoviesListFragmentC
     }
 
     override fun backClick() {
-        val lastFragment = supportFragmentManager.fragments.last()
-        supportFragmentManager.beginTransaction()
-                .remove(lastFragment)
-                .commit()
+        onBackPressed()
     }
 
 }
