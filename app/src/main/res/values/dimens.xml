@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="margin_extra2_large">102dp</dimen>
     <dimen name="margin_extra_large">96dp</dimen>
+    <dimen name="margin_large2">60dp</dimen>
+    <dimen name="margin_large">48dp</dimen>
     <dimen name="margin_medium">24dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_middle">12dp</dimen>
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_tiny_plus">7dp</dimen>
     <dimen name="margin_tiny">6dp</dimen>
+    <dimen name="margin_extra_tiny">5dp</dimen>
     <dimen name="margin_extra_small">4dp</dimen>
+    <dimen name="margin_extra_small2">2dp</dimen>
 
     <dimen name="margin_between_star">3.25dp</dimen>
 
@@ -20,9 +26,15 @@
     <dimen name="width_back_button">42dp</dimen>
     <dimen name="width_age_field">24dp</dimen>
 
+    <dimen name="height_textline_extra_small">12dp</dimen>
     <dimen name="height_textline_small">16dp</dimen>
     <dimen name="height_textline_normal">20dp</dimen>
     <dimen name="height_textline_large">24dp</dimen>
     <dimen name="height_textline_extra_large">32dp</dimen>
+
+    <dimen name="card_movie_width_medium">170dp</dimen>
+    <dimen name="card_movie_hight_medium">296dp</dimen>
+    <dimen name="card_movie_corner_radius">8dp</dimen>
+    <dimen name="card_movie_stroke_width">1dp</dimen>
 
 </resources>

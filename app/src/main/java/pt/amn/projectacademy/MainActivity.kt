@@ -1,26 +1,38 @@
 package pt.amn.projectacademy
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import pt.amn.projectacademy.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
-
-    // The variable needed for a view binding mechanism
-    private lateinit var binding: ActivityMainBinding
+class MainActivity : AppCompatActivity(), FragmentMoviesList.MoviesListFragmentClicks,
+            FragmentMoviesDetails.MovieDetailsFragmentClicks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        // Initialize the binding
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        binding.btShowMovieDetails.setOnClickListener {
-            val intent = Intent(this, MovieDetailsActivity::class.java)
-            startActivity(intent)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.fragments_container, FragmentMoviesList.newInstance())
+                    .commit()
         }
     }
+
+    override fun onBackPressed() {
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun cardClick() {
+        supportFragmentManager.beginTransaction()
+                .add(R.id.fragments_container, FragmentMoviesDetails.newInstance())
+                .addToBackStack(null)
+                .commit()
+    }
+
+    override fun backClick() {
+        val lastFragment = supportFragmentManager.fragments.last()
+        supportFragmentManager.beginTransaction()
+                .remove(lastFragment)
+                .commit()
+    }
+
 }
