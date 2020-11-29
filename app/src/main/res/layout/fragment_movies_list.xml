@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_normal"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_aim"
+            app:srcCompat="@drawable/ic_aim"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_location"
             app:layout_constraintBottom_toBottomOf="@id/tv_location"/>
@@ -26,8 +26,8 @@
         <TextView
             android:id="@+id/tv_location"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="44dp"
+            android:layout_height="@dimen/height_textline_extra_large1"
+            android:layout_marginTop="@dimen/margin_top_back_button"
             android:layout_marginStart="@dimen/margin_small"
             android:fontFamily="@font/roboto_black"
             android:gravity="start|center_vertical"
@@ -58,30 +58,36 @@
 
                 <!--Card background-->
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:background="@drawable/gradient_radial_card"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <!--Mask & movie-->
                 <ImageView
                     android:id="@+id/iv_movie"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginBottom="@dimen/margin_large"
                     android:scaleType="centerCrop"
                     android:src="@drawable/movie"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginBottom="@dimen/margin_large"
                     android:background="@drawable/gradient_background_dark"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <!--like-->
                 <ImageView
@@ -115,7 +121,7 @@
                 <!--Description-->
                 <TextView
                     android:id="@+id/tv_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_small"
                     android:layout_marginTop="@dimen/margin_small"
@@ -126,11 +132,12 @@
                     android:textSize="14sp"
                     app:lineHeight="@dimen/height_textline_normal"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_movie"/>
 
                 <TextView
                     android:id="@+id/tv_time"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_small"
                     android:fontFamily="@font/roboto_black"
@@ -141,6 +148,7 @@
                     android:textSize="8sp"
                     app:lineHeight="@dimen/height_textline_extra_small"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_name"/>
 
                 <!--5 stars-->
@@ -178,7 +186,7 @@
                 <!--Tag-->
                 <TextView
                     android:id="@+id/tv_tag"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_small"
                     android:layout_marginBottom="@dimen/margin_extra_small2"
@@ -189,6 +197,7 @@
                     android:textSize="8sp"
                     app:lineHeight="@dimen/height_textline_extra_small"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/tv_review"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

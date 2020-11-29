@@ -31,6 +31,7 @@
     <dimen name="height_textline_normal">20dp</dimen>
     <dimen name="height_textline_large">24dp</dimen>
     <dimen name="height_textline_extra_large">32dp</dimen>
+    <dimen name="height_textline_extra_large1">40dp</dimen>
 
     <dimen name="card_movie_width_medium">170dp</dimen>
     <dimen name="card_movie_hight_medium">296dp</dimen>
