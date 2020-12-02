@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/movie_card"
+    android:layout_width="@dimen/card_movie_width_medium"
+    android:layout_height="@dimen/card_movie_hight_medium"
+    app:cardCornerRadius="@dimen/card_movie_corner_radius"
+    android:layout_marginBottom="@dimen/margin_middle2"
+    android:layout_marginHorizontal="@dimen/margin_tiny"
+    app:strokeColor="@color/stroke_gray_color"
+    app:strokeWidth="@dimen/card_movie_stroke_width">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--Card background-->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_radial_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!--Mask & movie-->
+    <ImageView
+        android:id="@+id/iv_movie"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/movie1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="@drawable/gradient_background_dark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_middle"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:scaleType="centerCrop"
+        android:src="@drawable/heart_like"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_age"
+        android:layout_width="@dimen/width_age_field"
+        android:layout_height="@dimen/width_age_field"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:alpha="0.9"
+        android:background="@drawable/shape_rectangle_with_circle_corners"
+        android:fontFamily="@font/roboto_black"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/minimum_age_example"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:fontFamily="@font/roboto_black"
+        android:gravity="start|bottom"
+        android:textColor="@color/text_light"
+        android:textSize="14sp"
+        app:lineHeight="@dimen/height_textline_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_movie"
+        tools:text="@string/movie_name_without_ln"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:fontFamily="@font/roboto_black"
+        android:gravity="start|bottom"
+        android:textAllCaps="true"
+        android:textColor="@color/text_dark_gray"
+        android:textSize="8sp"
+        app:lineHeight="@dimen/height_textline_extra_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:text="@string/movie_time_example"/>
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/height_textline_extra_small2"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_extra_tiny"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:numStars="5"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:transformPivotX="0dp"
+        android:progressBackgroundTint="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/iv_movie"
+        tools:rating="4.0"/>
+
+    <TextView
+        android:id="@+id/tv_review"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/height_textline_extra_small"
+        android:layout_marginStart="@dimen/margin_large2"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:fontFamily="@font/roboto_black"
+        android:gravity="start|top"
+        android:textAllCaps="true"
+        android:textColor="@color/text_gray"
+        android:textSize="8sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/iv_movie"
+        tools:text="@string/movie_review_example"/>
+
+    <TextView
+        android:id="@+id/tv_tag"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_extra_small2"
+        android:fontFamily="@font/roboto_light"
+        android:gravity="start|center_vertical"
+        android:textColor="@color/text_red"
+        android:textSize="8sp"
+        app:lineHeight="@dimen/height_textline_extra_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_review"
+        tools:text="@string/movie_tag_example"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
