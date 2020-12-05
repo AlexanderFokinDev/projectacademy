@@ -11,11 +11,8 @@ class ActorsAdapter() : RecyclerView.Adapter<ActorsAdapter.ActorsViewHolder>() {
     private var actors: List<Actor> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorsViewHolder {
-
-        val binding = ViewHolderActorBinding.inflate(LayoutInflater.from(parent.context)
-            , parent, false)
-
-        return ActorsViewHolder(binding)
+        return ActorsViewHolder(ViewHolderActorBinding.inflate(LayoutInflater.from(parent.context)
+            , parent, false))
     }
 
     override fun onBindViewHolder(holder: ActorsViewHolder, position: Int) {
@@ -34,8 +31,10 @@ class ActorsAdapter() : RecyclerView.Adapter<ActorsAdapter.ActorsViewHolder>() {
         : RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(actor: Actor) {
-            binding.tvName.text = actor.name
-            binding.ivActor.setImageResource(actor.imagePath)
+            binding.run {
+                tvName.text = actor.name
+                ivActor.setImageResource(actor.imagePath)
+            }
         }
 
     }
