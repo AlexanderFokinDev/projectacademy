@@ -18,10 +18,6 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.MoviesListFragmentC
         }
     }
 
-    override fun onBackPressed() {
-        supportFragmentManager.popBackStack()
-    }
-
     override fun cardClick(movie : Movie) {
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragments_container, FragmentMoviesDetails.newInstance(movie))

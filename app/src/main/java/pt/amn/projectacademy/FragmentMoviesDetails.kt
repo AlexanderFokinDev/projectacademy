@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import pt.amn.projectacademy.adapters.ActorsAdapter
 import pt.amn.projectacademy.databinding.FragmentMoviesDetailsBinding
 import pt.amn.projectacademy.models.Movie
@@ -19,18 +18,9 @@ class FragmentMoviesDetails : Fragment() {
     // This property is only valid between onCreateView and onDestroyView
     private val binding get() = _binding!!
 
-    private var fragmentMovie: Movie? = null
-
+    private var movie: Movie? = null
     private var listener : MovieDetailsFragmentClicks? = null
-
     private lateinit var adapter : ActorsAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            fragmentMovie = it.getParcelable(PARAM_MOVIE)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,28 +32,25 @@ class FragmentMoviesDetails : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recycler = binding.rvActors
         adapter = ActorsAdapter()
-        recycler.layoutManager = LinearLayoutManager(requireContext()
-            , LinearLayoutManager.HORIZONTAL, false)
-        recycler.adapter = adapter
+        binding.rvActors.adapter = adapter
 
         binding.tvPath.setOnClickListener {
             listener?.backClick()
         }
 
-        fragmentMovie?.let {
-            binding.tvName.text = it.name
-            binding.tvTag.text = it.tag
-            binding.tvReview.text = it.getReview()
-            binding.tvAge.text = it.getMinimumAge()
-            binding.ratingBar.rating = it.getRatingFloat()
+        movie = requireArguments().getParcelable(PARAM_MOVIE)
+        movie?.run {
+            binding.tvName.text = name
+            binding.tvTag.text = tag
+            binding.tvReview.text = getReview()
+            binding.tvAge.text = getMinimumAge()
+            binding.ratingBar.rating = getRatingFloat()
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
+        // load the list of actors
         updateData()
+
     }
 
     override fun onAttach(context: Context) {
@@ -83,7 +70,7 @@ class FragmentMoviesDetails : Fragment() {
         super.onDestroyView()
     }
 
-    fun updateData() {
+    private fun updateData() {
         adapter.bindActors(MoviesDataSource.getActors())
         adapter.notifyDataSetChanged()
     }
@@ -93,9 +80,7 @@ class FragmentMoviesDetails : Fragment() {
         /** @return A new instance of fragment FragmentMoviesDetails.*/
         @JvmStatic
         fun newInstance(movie : Movie) = FragmentMoviesDetails().apply {
-            val bundle = Bundle()
-            bundle.putParcelable(PARAM_MOVIE, movie)
-            arguments = bundle
+            arguments = Bundle().apply { putParcelable(PARAM_MOVIE, movie) }
         }
     }
 

@@ -13,11 +13,8 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
     private var movies: List<Movie> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
-
-        val binding = ViewHolderMovieBinding.inflate(LayoutInflater.from(parent.context)
-            , parent, false)
-
-        return MoviesViewHolder(binding)
+        return MoviesViewHolder(ViewHolderMovieBinding.inflate(LayoutInflater.from(parent.context)
+            , parent, false))
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
@@ -36,22 +33,24 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(movie: Movie, listener: OnRecyclerMovieClicked) {
-            binding.tvName.text = movie.name
-            binding.tvTag.text = movie.tag
-            binding.tvAge.text = movie.getMinimumAge()
-            binding.tvTime.text = movie.getDuration()
-            binding.tvReview.text = movie.getReview()
-            binding.ratingBar.rating = movie.getRatingFloat()
-            binding.ivMovie.setImageResource(movie.imagePath)
+            binding.run {
+                tvName.text = movie.name
+                tvTag.text = movie.tag
+                tvAge.text = movie.getMinimumAge()
+                tvTime.text = movie.getDuration()
+                tvReview.text = movie.getReview()
+                ratingBar.rating = movie.getRatingFloat()
+                ivMovie.setImageResource(movie.imagePath)
 
-            if (movie.like) {
-                binding.ivLike.setImageResource(R.drawable.heart_like_filled)
-            } else {
-                binding.ivLike.setImageResource(R.drawable.heart_like)
-            }
+                if (movie.like) {
+                    ivLike.setImageResource(R.drawable.heart_like_filled)
+                } else {
+                    ivLike.setImageResource(R.drawable.heart_like)
+                }
 
-            binding.movieCard.setOnClickListener {
-                listener.onClick(movie)
+                movieCard.setOnClickListener {
+                    listener.onClick(movie)
+                }
             }
         }
 

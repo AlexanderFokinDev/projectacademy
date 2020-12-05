@@ -1,8 +1,9 @@
 package pt.amn.projectacademy.models
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Movie (
     val name: String?,
     val minimumAge: Int,
@@ -13,45 +14,6 @@ data class Movie (
     val imagePath: Int,
     val like: Boolean = false
 ) : Parcelable {
-
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readDouble(),
-        parcel.readInt(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readByte() != 0.toByte()
-    ) {
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.apply {
-            writeString(name)
-            writeInt(minimumAge)
-            writeInt(duration)
-            writeDouble(rating)
-            writeInt(reviewCount)
-            writeString(tag)
-            writeInt(imagePath)
-            writeByte(if (like) 1 else 0)
-        }
-    }
-
-    companion object CREATOR : Parcelable.Creator<Movie> {
-        override fun createFromParcel(parcel: Parcel): Movie {
-            return Movie(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Movie?> {
-            return arrayOfNulls(size)
-        }
-    }
 
     fun getReview() : String {
         return "${reviewCount} Reviews"

@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import pt.amn.projectacademy.adapters.MoviesAdapter
 import pt.amn.projectacademy.adapters.OnRecyclerMovieClicked
 import pt.amn.projectacademy.databinding.FragmentMoviesListBinding
@@ -19,7 +18,6 @@ class FragmentMoviesList : Fragment() {
     private val binding get() = _binding!!
 
     private var fragmentListener : MoviesListFragmentClicks? = null
-
     private lateinit var adapter : MoviesAdapter
 
     override fun onCreateView(
@@ -33,17 +31,8 @@ class FragmentMoviesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val recycler = binding.rvMovies
         adapter = MoviesAdapter(recyclerListener)
-        recycler.layoutManager = GridLayoutManager(requireContext(), 2
-            , GridLayoutManager.VERTICAL, false)
-        recycler.adapter = adapter
-
-    }
-
-    override fun onStart() {
-        super.onStart()
+        binding.rvMovies.adapter = adapter
         updateData()
     }
 
@@ -64,7 +53,7 @@ class FragmentMoviesList : Fragment() {
         super.onDestroyView()
     }
 
-    fun updateData() {
+    private fun updateData() {
         adapter.bindMovies(MoviesDataSource.getMovies())
         adapter.notifyDataSetChanged()
     }
