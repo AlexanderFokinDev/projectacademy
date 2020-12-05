@@ -2,6 +2,7 @@ package pt.amn.projectacademy
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import pt.amn.projectacademy.models.Movie
 
 class MainActivity : AppCompatActivity(), FragmentMoviesList.MoviesListFragmentClicks,
             FragmentMoviesDetails.MovieDetailsFragmentClicks {
@@ -21,9 +22,9 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.MoviesListFragmentC
         supportFragmentManager.popBackStack()
     }
 
-    override fun cardClick() {
+    override fun cardClick(movie : Movie) {
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragments_container, FragmentMoviesDetails.newInstance())
+                .add(R.id.fragments_container, FragmentMoviesDetails.newInstance(movie))
                 .addToBackStack(null)
                 .commit()
     }

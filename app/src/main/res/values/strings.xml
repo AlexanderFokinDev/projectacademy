@@ -3,10 +3,6 @@
 
     <!--Fragment movie details-->
     <string name="title_activity_movie_details">Movie details</string>
-    <string name="name_actor1">Robert Downey Jr.</string>
-    <string name="name_actor2">Chris Evans</string>
-    <string name="name_actor3">Mark Ruffalo</string>
-    <string name="name_actor4">Chris Hemsworth</string>
     <string name="button_show_movie_details">Show movie details</string>
     <string name="button_back">Back</string>
     <string name="title_storyline">Storyline</string>
@@ -14,14 +10,14 @@
     <string name="text_storyline">After the devastating events of Avengers: Infinity War,
         the universe is in ruins. With the help of remaining allies, the Avengers assemble once
         more in order to reverse Thanos\' actions and restore balance to the universe.</string>
-    <string name="minimum_age">13+</string>
+    <string name="minimum_age_example">13+</string>
     <string name="movie_name">Avengers:\nEnd Game</string>
     <string name="movie_name_without_ln">Avengers: End Game</string>
-    <string name="movie_tag">Action, Adventure, Fantasy</string>
-    <string name="movie_review">125 Reviews</string>
+    <string name="movie_tag_example">Action, Adventure, Fantasy</string>
+    <string name="movie_review_example">125 Reviews</string>
 
     <!--Fragment movies list-->
     <string name="title_movies_list">Movies list</string>
-    <string name="movie_time">137 min</string>
+    <string name="movie_time_example">137 min</string>
 
 </resources>

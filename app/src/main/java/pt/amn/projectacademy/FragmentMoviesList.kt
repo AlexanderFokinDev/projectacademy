@@ -6,7 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import pt.amn.projectacademy.adapters.MoviesAdapter
+import pt.amn.projectacademy.adapters.OnRecyclerMovieClicked
 import pt.amn.projectacademy.databinding.FragmentMoviesListBinding
+import pt.amn.projectacademy.models.Movie
 
 class FragmentMoviesList : Fragment() {
 
@@ -14,7 +18,9 @@ class FragmentMoviesList : Fragment() {
     // This property is only valid between onCreateView and onDestroyView
     private val binding get() = _binding!!
 
-    private var listener : MoviesListFragmentClicks? = null
+    private var fragmentListener : MoviesListFragmentClicks? = null
+
+    private lateinit var adapter : MoviesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,26 +34,45 @@ class FragmentMoviesList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.movieCard.setOnClickListener {
-            listener?.cardClick()
-        }
+        val recycler = binding.rvMovies
+        adapter = MoviesAdapter(recyclerListener)
+        recycler.layoutManager = GridLayoutManager(requireContext(), 2
+            , GridLayoutManager.VERTICAL, false)
+        recycler.adapter = adapter
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateData()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is MoviesListFragmentClicks) {
-            listener = context
+            fragmentListener = context
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+        fragmentListener = null
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    fun updateData() {
+        adapter.bindMovies(MoviesDataSource.getMovies())
+        adapter.notifyDataSetChanged()
+    }
+
+    private val recyclerListener = object : OnRecyclerMovieClicked {
+        override fun onClick(movie: Movie) {
+            fragmentListener?.cardClick(movie)
+        }
     }
 
     companion object {
@@ -57,6 +82,6 @@ class FragmentMoviesList : Fragment() {
     }
 
     interface MoviesListFragmentClicks {
-        fun cardClick()
+        fun cardClick(movie : Movie)
     }
 }

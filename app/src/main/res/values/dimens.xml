@@ -8,6 +8,7 @@
     <dimen name="margin_medium">24dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="margin_middle">12dp</dimen>
+    <dimen name="margin_middle2">11dp</dimen>
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_tiny_plus">7dp</dimen>
     <dimen name="margin_tiny">6dp</dimen>
@@ -27,6 +28,7 @@
     <dimen name="width_age_field">24dp</dimen>
 
     <dimen name="height_textline_extra_small">12dp</dimen>
+    <dimen name="height_textline_extra_small2">14dp</dimen>
     <dimen name="height_textline_small">16dp</dimen>
     <dimen name="height_textline_normal">20dp</dimen>
     <dimen name="height_textline_large">24dp</dimen>
@@ -37,5 +39,8 @@
     <dimen name="card_movie_hight_medium">296dp</dimen>
     <dimen name="card_movie_corner_radius">8dp</dimen>
     <dimen name="card_movie_stroke_width">1dp</dimen>
+
+    <dimen name="small_icon_actor_width">80dp</dimen>
+    <dimen name="large_icon_actor_width">150dp</dimen>
 
 </resources>
