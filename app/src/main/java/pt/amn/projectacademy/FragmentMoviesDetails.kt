@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import pt.amn.projectacademy.adapters.ActorsAdapter
 import pt.amn.projectacademy.databinding.FragmentMoviesDetailsBinding
 import pt.amn.projectacademy.models.Movie
@@ -41,11 +42,16 @@ class FragmentMoviesDetails : Fragment() {
 
         movie = requireArguments().getParcelable(PARAM_MOVIE)
         movie?.run {
-            binding.tvName.text = name
-            binding.tvTag.text = tag
+            binding.tvName.text = title
+            binding.tvStoryline.text = overview
+            binding.tvTag.text = getTag()
             binding.tvReview.text = getReview()
             binding.tvAge.text = getMinimumAge()
-            binding.ratingBar.rating = getRatingFloat()
+            binding.ratingBar.rating = getRating()
+
+            Glide.with(binding.root)
+                .load(backdrop)
+                .into(binding.ivBackground)
         }
 
         // load the list of actors
@@ -71,8 +77,12 @@ class FragmentMoviesDetails : Fragment() {
     }
 
     private fun updateData() {
-        adapter.bindActors(MoviesDataSource.getActors())
-        adapter.notifyDataSetChanged()
+        /*** movie - это nullable-переменная, поэтому вызываю таким образом или лучше было бы через
+        movie!!, так как movie - всегда должно быть заполнено***/
+        movie?.let { movieNotNull ->
+            adapter.bindActors(movieNotNull.actors)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     companion object {

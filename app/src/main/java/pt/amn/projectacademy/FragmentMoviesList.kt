@@ -2,14 +2,18 @@ package pt.amn.projectacademy
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.coroutines.*
 import pt.amn.projectacademy.adapters.MoviesAdapter
 import pt.amn.projectacademy.adapters.OnRecyclerMovieClicked
+import pt.amn.projectacademy.data.loadMovies
 import pt.amn.projectacademy.databinding.FragmentMoviesListBinding
 import pt.amn.projectacademy.models.Movie
+import java.io.IOException
 
 class FragmentMoviesList : Fragment() {
 
@@ -19,6 +23,7 @@ class FragmentMoviesList : Fragment() {
 
     private var fragmentListener : MoviesListFragmentClicks? = null
     private lateinit var adapter : MoviesAdapter
+    private var coroutineSupervisorScope = createSuperScope()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,9 +58,24 @@ class FragmentMoviesList : Fragment() {
         super.onDestroyView()
     }
 
+    private fun createSuperScope() = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     private fun updateData() {
-        adapter.bindMovies(MoviesDataSource.getMovies())
-        adapter.notifyDataSetChanged()
+        coroutineSupervisorScope.launch(superExceptionHandler) {
+            adapter.bindMovies(loadMovies(requireContext()))
+            withContext(Dispatchers.Main) { adapter.notifyDataSetChanged() }
+        }
+    }
+
+    private val superExceptionHandler = CoroutineExceptionHandler { canceledContext, exception ->
+        Log.e(TAG, "SuperExceptionHandler [canceledContext:$canceledContext]")
+        coroutineSupervisorScope.launch {
+            logExceptionSuspend("superExceptionHandler", exception)
+        }
+    }
+
+    private suspend fun logExceptionSuspend(who: String, throwable: Throwable) = withContext(Dispatchers.Main) {
+        Log.e(TAG, "$who::Failed", throwable)
     }
 
     private val recyclerListener = object : OnRecyclerMovieClicked {
@@ -74,3 +94,5 @@ class FragmentMoviesList : Fragment() {
         fun cardClick(movie : Movie)
     }
 }
+
+private const val TAG = "FragmentMoviesList"

@@ -3,6 +3,7 @@ package pt.amn.projectacademy.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import pt.amn.projectacademy.R
 import pt.amn.projectacademy.databinding.ViewHolderMovieBinding
 import pt.amn.projectacademy.models.Movie
@@ -34,19 +35,16 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
 
         fun onBind(movie: Movie, listener: OnRecyclerMovieClicked) {
             binding.run {
-                tvName.text = movie.name
-                tvTag.text = movie.tag
+                tvName.text = movie.title
+                ratingBar.rating = movie.getRating()
                 tvAge.text = movie.getMinimumAge()
-                tvTime.text = movie.getDuration()
+                tvTime.text = movie.getRuntime()
                 tvReview.text = movie.getReview()
-                ratingBar.rating = movie.getRatingFloat()
-                ivMovie.setImageResource(movie.imagePath)
+                tvTag.text = movie.getTag()
 
-                if (movie.like) {
-                    ivLike.setImageResource(R.drawable.heart_like_filled)
-                } else {
-                    ivLike.setImageResource(R.drawable.heart_like)
-                }
+                Glide.with(binding.root)
+                    .load(movie.poster)
+                    .into(ivMovie)
 
                 movieCard.setOnClickListener {
                     listener.onClick(movie)

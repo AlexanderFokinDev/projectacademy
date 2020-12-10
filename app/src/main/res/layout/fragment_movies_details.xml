@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_background_image"
             android:scaleType="centerCrop"
-            android:src="@drawable/bg_movie_details"
+            tools:src="@drawable/bg_movie_details"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -155,7 +155,7 @@
             android:layout_marginHorizontal="@dimen/margin_normal"
             android:gravity="center_vertical"
             android:fontFamily="@font/roboto_light"
-            android:text="@string/text_storyline"
+            tools:text="@string/text_storyline_example"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
