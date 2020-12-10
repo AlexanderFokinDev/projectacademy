@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import pt.amn.projectacademy.adapters.ActorsAdapter
 import pt.amn.projectacademy.databinding.FragmentMoviesDetailsBinding
 import pt.amn.projectacademy.models.Movie
@@ -48,10 +47,7 @@ class FragmentMoviesDetails : Fragment() {
             binding.tvReview.text = getReview()
             binding.tvAge.text = getMinimumAge()
             binding.ratingBar.rating = getRating()
-
-            Glide.with(binding.root)
-                .load(backdrop)
-                .into(binding.ivBackground)
+            binding.ivBackground.loadImage(binding.root, backdrop)
         }
 
         // load the list of actors

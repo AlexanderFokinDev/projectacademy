@@ -55,6 +55,7 @@ class FragmentMoviesList : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
+        coroutineSupervisorScope.cancel()
         super.onDestroyView()
     }
 

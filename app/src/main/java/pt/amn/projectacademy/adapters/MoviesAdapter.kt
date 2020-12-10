@@ -3,10 +3,9 @@ package pt.amn.projectacademy.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import pt.amn.projectacademy.R
 import pt.amn.projectacademy.databinding.ViewHolderMovieBinding
 import pt.amn.projectacademy.models.Movie
+import pt.amn.projectacademy.loadImage
 
 class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
     : RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>() {
@@ -41,10 +40,7 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
                 tvTime.text = movie.getRuntime()
                 tvReview.text = movie.getReview()
                 tvTag.text = movie.getTag()
-
-                Glide.with(binding.root)
-                    .load(movie.poster)
-                    .into(ivMovie)
+                ivMovie.loadImage(binding.root, movie.poster)
 
                 movieCard.setOnClickListener {
                     listener.onClick(movie)

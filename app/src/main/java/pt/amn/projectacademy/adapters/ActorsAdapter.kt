@@ -3,8 +3,8 @@ package pt.amn.projectacademy.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import pt.amn.projectacademy.databinding.ViewHolderActorBinding
+import pt.amn.projectacademy.loadImage
 import pt.amn.projectacademy.models.Actor
 
 class ActorsAdapter() : RecyclerView.Adapter<ActorsAdapter.ActorsViewHolder>() {
@@ -34,10 +34,7 @@ class ActorsAdapter() : RecyclerView.Adapter<ActorsAdapter.ActorsViewHolder>() {
         fun onBind(actor: Actor) {
             binding.run {
                 tvName.text = actor.name
-
-                Glide.with(binding.root)
-                    .load(actor.picture)
-                    .into(ivActor)
+                ivActor.loadImage(binding.root, actor.picture)
             }
         }
 
