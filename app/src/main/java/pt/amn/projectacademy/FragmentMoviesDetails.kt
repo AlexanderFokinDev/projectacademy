@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import pt.amn.projectacademy.adapters.ActorsAdapter
 import pt.amn.projectacademy.databinding.FragmentMoviesDetailsBinding
+import pt.amn.projectacademy.models.Actor
 import pt.amn.projectacademy.models.Movie
+import pt.amn.projectacademy.viewmodels.MovieDetailsViewModel
 
 private const val PARAM_MOVIE = "fragment_movie"
 
@@ -20,7 +23,9 @@ class FragmentMoviesDetails : Fragment() {
 
     private var movie: Movie? = null
     private var listener : MovieDetailsFragmentClicks? = null
-    private lateinit var adapter : ActorsAdapter
+    private val adapter : ActorsAdapter = ActorsAdapter()
+
+    private val viewModel: MovieDetailsViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -32,7 +37,6 @@ class FragmentMoviesDetails : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ActorsAdapter()
         binding.rvActors.adapter = adapter
 
         binding.tvPath.setOnClickListener {
@@ -48,10 +52,17 @@ class FragmentMoviesDetails : Fragment() {
             binding.tvAge.text = getMinimumAge()
             binding.ratingBar.rating = getRating()
             binding.ivBackground.loadImage(binding.root, backdrop)
+
+            if (!viewModel.initialized) {
+                viewModel.initialized = true
+                viewModel.setActorsList(actors)
+            }
         }
 
-        // load the list of actors
-        updateData()
+        viewModel.actorsList.observe(viewLifecycleOwner) { actorList ->
+            // load the list of actors
+            updateData(actorList)
+        }
 
     }
 
@@ -72,13 +83,9 @@ class FragmentMoviesDetails : Fragment() {
         super.onDestroyView()
     }
 
-    private fun updateData() {
-        /*** movie - это nullable-переменная, поэтому вызываю таким образом или лучше было бы через
-        movie!!, так как movie - всегда должно быть заполнено***/
-        movie?.let { movieNotNull ->
-            adapter.bindActors(movieNotNull.actors)
-            adapter.notifyDataSetChanged()
-        }
+    private fun updateData(actorsList: List<Actor>) {
+        adapter.bindActors(actorsList)
+        adapter.notifyDataSetChanged()
     }
 
     companion object {
