@@ -12,6 +12,7 @@ import pt.amn.projectacademy.databinding.FragmentMoviesDetailsBinding
 import pt.amn.projectacademy.models.Actor
 import pt.amn.projectacademy.models.Movie
 import pt.amn.projectacademy.viewmodels.MovieDetailsViewModel
+import pt.amn.projectacademy.viewmodels.MovieDetailsViewModelFactory
 
 private const val PARAM_MOVIE = "fragment_movie"
 
@@ -25,7 +26,9 @@ class FragmentMoviesDetails : Fragment() {
     private var listener : MovieDetailsFragmentClicks? = null
     private val adapter : ActorsAdapter = ActorsAdapter()
 
-    private val viewModel: MovieDetailsViewModel by viewModels()
+    private val viewModel: MovieDetailsViewModel by viewModels {
+        MovieDetailsViewModelFactory(movie?.actors)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,11 +55,6 @@ class FragmentMoviesDetails : Fragment() {
             binding.tvAge.text = getMinimumAge()
             binding.ratingBar.rating = getRating()
             binding.ivBackground.loadImage(binding.root, backdrop)
-
-            if (!viewModel.initialized) {
-                viewModel.initialized = true
-                viewModel.setActorsList(actors)
-            }
         }
 
         viewModel.actorsList.observe(viewLifecycleOwner) { actorList ->
