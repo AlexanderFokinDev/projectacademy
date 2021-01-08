@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/background_dark">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/margin_top_back_button"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_top_back_button"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/iv_aim"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/height_textline_extra_large1"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:gravity="start|center_vertical"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_aim"/>
-
-            <TextView
-                android:id="@+id/tv_location"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/height_textline_extra_large1"
-                android:layout_marginStart="@dimen/margin_small"
-                android:fontFamily="@font/roboto_black"
-                android:gravity="start|center_vertical"
-                android:text="@string/title_movies_list"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="normal" />
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_movies"
+        <ImageView
+            android:id="@+id/iv_aim"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            android:orientation="vertical"/>
+            android:layout_height="@dimen/height_textline_extra_large1"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:gravity="start|center_vertical"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_aim"/>
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/height_textline_extra_large1"
+            android:layout_marginStart="@dimen/margin_small"
+            android:fontFamily="@font/roboto_black"
+            android:gravity="start|center_vertical"
+            android:text="@string/title_movies_list"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="normal" />
 
     </LinearLayout>
 
-</ScrollView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_movies"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        android:orientation="vertical"/>
+
+</LinearLayout>

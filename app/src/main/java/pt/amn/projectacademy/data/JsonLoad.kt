@@ -95,13 +95,14 @@ internal fun parseMovies(
             backdrop = jsonMovie.backdropPicture,
             ratings = jsonMovie.ratings,
             adult = jsonMovie.adult,
-            runtime = jsonMovie.runtime,
+            releaseDate = "",
             genres = jsonMovie.genreIds.map {
                 genresMap[it] ?: throw IllegalArgumentException("Genre not found")
             },
             actors = jsonMovie.actors.map {
                 actorsMap[it] ?: throw IllegalArgumentException("Actor not found")
-            }
+            },
+            voteCount = 0
         )
     }
 }

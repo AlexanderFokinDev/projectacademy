@@ -11,20 +11,15 @@ data class Movie (
     val poster: String,
     val backdrop: String,
     var ratings: Float,
+    val voteCount: Int,
     val adult: Boolean,
-    val runtime: Int, // minutes
+    val releaseDate: String,
     val genres: List<Genre>,
     val actors: List<Actor>
-) : Parcelable {
+) : Parcelable  {
 
     fun getReview() : String {
-        //return "$reviewCount Reviews"
-        // Пока ставлю заглушку, в ДЗ в loadere такого поля нет почему-то
-        return "100 Reviews"
-    }
-
-    fun getRuntime() : String {
-        return "$runtime min"
+        return "$voteCount Reviews"
     }
 
     fun getMinimumAge() : String {

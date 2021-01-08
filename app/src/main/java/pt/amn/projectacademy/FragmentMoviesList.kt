@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.paging.PagedList
 import pt.amn.projectacademy.adapters.MoviesAdapter
 import pt.amn.projectacademy.adapters.OnRecyclerMovieClicked
 import pt.amn.projectacademy.databinding.FragmentMoviesListBinding
@@ -60,9 +61,8 @@ class FragmentMoviesList : Fragment() {
         super.onDestroyView()
     }
 
-    private fun updateData(moviesList: List<Movie>) {
-        adapter.bindMovies(moviesList)
-        adapter.notifyDataSetChanged()
+    private fun updateData(moviesList: PagedList<Movie>) {
+        adapter.submitList(moviesList)
     }
 
     private val recyclerListener = object : OnRecyclerMovieClicked {

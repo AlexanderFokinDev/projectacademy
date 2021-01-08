@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import pt.amn.projectacademy.databinding.ViewHolderActorBinding
 import pt.amn.projectacademy.loadImage
 import pt.amn.projectacademy.models.Actor
+import pt.amn.projectacademy.utilities.BASE_URL_ACTOR_IMAGE
 
 class ActorsAdapter() : RecyclerView.Adapter<ActorsAdapter.ActorsViewHolder>() {
 
@@ -34,7 +35,7 @@ class ActorsAdapter() : RecyclerView.Adapter<ActorsAdapter.ActorsViewHolder>() {
         fun onBind(actor: Actor) {
             binding.run {
                 tvName.text = actor.name
-                ivActor.loadImage(binding.root, actor.picture)
+                ivActor.loadImage(binding.root, BASE_URL_ACTOR_IMAGE + actor.picture)
             }
         }
 

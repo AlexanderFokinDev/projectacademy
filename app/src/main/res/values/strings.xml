@@ -19,5 +19,6 @@
     <!--Fragment movies list-->
     <string name="title_movies_list">Movies list</string>
     <string name="movie_time_example">137 min</string>
+    <string name="title_release_date">Release date:</string>
 
 </resources>

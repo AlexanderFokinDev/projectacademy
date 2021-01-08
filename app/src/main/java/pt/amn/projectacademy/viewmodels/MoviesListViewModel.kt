@@ -1,36 +1,32 @@
 package pt.amn.projectacademy.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import pt.amn.projectacademy.MainApplication
-import pt.amn.projectacademy.data.loadMovies
+import androidx.paging.PagedList
+import kotlinx.coroutines.cancel
+import pt.amn.projectacademy.api.TMDBService
+import pt.amn.projectacademy.data.MoviesRepository
 import pt.amn.projectacademy.models.Movie
-import java.io.IOException
+import pt.amn.projectacademy.usecases.MoviesInteractor
 
 class MoviesListViewModel() : ViewModel() {
 
-    private val _mutableMoviesList = MutableLiveData<List<Movie>>(emptyList())
-    val moviesList: LiveData<List<Movie>> get() = _mutableMoviesList
+    private val interactor = MoviesInteractor(MoviesRepository(TMDBService.create()), viewModelScope)
 
-    init {
-        loadMoviesList()
-    }
+    private var _mutableMoviesList: LiveData<PagedList<Movie>>? = null
 
-    private fun loadMoviesList() {
-        viewModelScope.launch {
-            try {
-                _mutableMoviesList.value = loadMovies(MainApplication.applicationContext())
-            } catch (e: IOException) {
-                logExceptionSuspend("viewModelExceptionHandler", e)
-            }
+    val moviesList: LiveData<PagedList<Movie>> get() {
+        if (_mutableMoviesList == null) {
+            _mutableMoviesList = interactor.getPopularMovies()
         }
+        return _mutableMoviesList as LiveData<PagedList<Movie>>
     }
 
-    private suspend fun logExceptionSuspend(who: String, throwable: Throwable) = withContext(Dispatchers.Main) {
-        Log.e(TAG, "$who::Failed", throwable)
+    /**
+     * Cancel all coroutines when the ViewModel is cleared
+     */
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.coroutineContext.cancel()
     }
 
 }
