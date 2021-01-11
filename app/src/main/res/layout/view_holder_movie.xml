@@ -92,7 +92,23 @@
         tools:text="@string/movie_name_without_ln"/>
 
     <TextView
-        android:id="@+id/tv_time"
+        android:id="@+id/tv_release_date_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:fontFamily="@font/roboto_black"
+        android:gravity="start|bottom"
+        android:textAllCaps="true"
+        android:textColor="@color/text_dark_gray"
+        android:textSize="8sp"
+        android:text="@string/title_release_date"
+        app:lineHeight="@dimen/height_textline_extra_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_release_date"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <TextView
+        android:id="@+id/tv_release_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_small"
@@ -102,10 +118,9 @@
         android:textColor="@color/text_dark_gray"
         android:textSize="8sp"
         app:lineHeight="@dimen/height_textline_extra_small"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_release_date_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_name"
-        tools:text="@string/movie_time_example"/>
+        tools:text="2020-11-25"/>
 
     <RatingBar
         android:id="@+id/rating_bar"

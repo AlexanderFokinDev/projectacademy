@@ -11,6 +11,7 @@ import pt.amn.projectacademy.adapters.ActorsAdapter
 import pt.amn.projectacademy.databinding.FragmentMoviesDetailsBinding
 import pt.amn.projectacademy.models.Actor
 import pt.amn.projectacademy.models.Movie
+import pt.amn.projectacademy.utilities.BASE_URL_BACKDROP_IMAGE
 import pt.amn.projectacademy.viewmodels.MovieDetailsViewModel
 import pt.amn.projectacademy.viewmodels.MovieDetailsViewModelFactory
 
@@ -27,7 +28,7 @@ class FragmentMoviesDetails : Fragment() {
     private val adapter : ActorsAdapter = ActorsAdapter()
 
     private val viewModel: MovieDetailsViewModel by viewModels {
-        MovieDetailsViewModelFactory(movie?.actors)
+        MovieDetailsViewModelFactory(movie?.id)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +55,7 @@ class FragmentMoviesDetails : Fragment() {
             binding.tvReview.text = getReview()
             binding.tvAge.text = getMinimumAge()
             binding.ratingBar.rating = getRating()
-            binding.ivBackground.loadImage(binding.root, backdrop)
+            binding.ivBackground.loadImage(binding.root, BASE_URL_BACKDROP_IMAGE + backdrop)
         }
 
         viewModel.actorsList.observe(viewLifecycleOwner) { actorList ->
