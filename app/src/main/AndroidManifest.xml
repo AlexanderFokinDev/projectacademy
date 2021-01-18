@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjectAcademy"
-        android:name=".MainApplication">
+        android:name=".di.MainApplication">
         <activity
             android:name=".MainActivity"
             android:launchMode="standard">
