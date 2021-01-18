@@ -7,10 +7,10 @@ import pt.amn.projectacademy.domain.models.Movie
 
 @Serializable
 data class MovieDataModel (
-    val adult: Boolean?,
+    val adult: Boolean? = false,
 
     @SerialName("backdrop_path")
-    val backdropPath: String?,
+    val backdropPath: String? = "",
 
     @SerialName("genre_ids")
     val genreIDS: List<Int>,
@@ -18,28 +18,26 @@ data class MovieDataModel (
     val id: Int,
 
     @SerialName("original_language")
-    val originalLanguage: String?,
+    val originalLanguage: String? = "",
 
     @SerialName("original_title")
-    val originalTitle: String?,
+    val originalTitle: String? = "",
 
-    val overview: String?,
-    val popularity: Float,
+    val overview: String? = "",
 
     @SerialName("poster_path")
-    val posterPath: String?,
+    val posterPath: String? = "",
 
     @SerialName("release_date")
-    val releaseDate: String?,
+    val releaseDate: String? = "",
 
-    val title: String?,
-    val video: Boolean,
+    val title: String? = "",
 
     @SerialName("vote_average")
-    val voteAverage: Float?,
+    val voteAverage: Float? = 0F,
 
     @SerialName("vote_count")
-    val voteCount: Int?
+    val voteCount: Int? = 0
 )
 
 fun MovieDataModel.toDomainModel(genres: List<Genre>): Movie {
