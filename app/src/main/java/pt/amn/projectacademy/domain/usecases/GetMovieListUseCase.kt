@@ -27,7 +27,8 @@ class GetMovieListUseCase(private val repository: MoviesRepository) {
             try {
                 genres = repository.getGenres()
             } catch (e: IOException) {
-                throw IllegalArgumentException("Genre not found")
+                //throw IllegalArgumentException("Genre not found")
+                Result.Error(e)
             }
         }
         return genres ?: emptyList()
