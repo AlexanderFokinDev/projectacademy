@@ -3,7 +3,7 @@ package pt.amn.projectacademy.utils
 import pt.amn.projectacademy.BuildConfig
 
 /**
- * Constants used throughout the app.
+ * Constants used throughout the app
  */
 const val TMDB_API_KEY = BuildConfig.TMDB_API_KEY
 
