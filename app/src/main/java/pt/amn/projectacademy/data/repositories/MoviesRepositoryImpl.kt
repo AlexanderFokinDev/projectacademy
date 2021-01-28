@@ -13,7 +13,8 @@ import pt.amn.projectacademy.domain.repositories.MoviesRepository
 import java.io.IOException
 
 class MoviesRepositoryImpl(
-    private val service: TMDBService
+    private val service: TMDBService,
+    private val database: AppDatabase
 ) : MoviesRepository {
 
     override suspend fun getPopularMovies(page: Int, genres: List<Genre>): List<Movie> {
@@ -23,7 +24,6 @@ class MoviesRepositoryImpl(
          *  на UI попадут данные из API. Если данные получить не удастся (например, Wifi отключен),
          *  то на UI попадут фильмы из локальной БД.
          */
-        val database = AppDatabase.getInstance()
         var movieList: List<Movie> = database.movieDao().getAll()
             .map { movieEntity ->
                 movieEntity.toDomainModel(genres)
@@ -51,7 +51,6 @@ class MoviesRepositoryImpl(
 
     override suspend fun getGenres(): List<Genre> {
 
-        val database = AppDatabase.getInstance()
         var genres: List<Genre> = database.genreDao().getAll()
             .map { genreEntity ->
                 genreEntity.toDomainModel()
@@ -78,7 +77,6 @@ class MoviesRepositoryImpl(
 
     override suspend fun getMovieActors(movieId: Int): List<Actor> {
 
-        val database = AppDatabase.getInstance()
         var actors: List<Actor> = database.actorDao().getAll()
             .map { actorEntity ->
                 actorEntity.toDomainModel()

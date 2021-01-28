@@ -10,16 +10,16 @@ data class ActorEntity (
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Int,
-    val name: String? = "",
-    val profilePath: String? = ""
+    val name: String,
+    val profilePath: String
 )
 
 fun ActorEntity.toDomainModel(): Actor {
 
     return Actor(
         id = this.id,
-        name = this.name ?: "",
-        picture = this.profilePath ?: ""
+        name = this.name,
+        picture = this.profilePath
     )
 }
 
