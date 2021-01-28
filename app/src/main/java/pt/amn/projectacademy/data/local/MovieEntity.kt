@@ -11,15 +11,15 @@ data class MovieEntity (
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Int,
-    val title: String? = "",
-    val overview: String? = "",
-    val posterPath: String? = "",
-    val backdropPath: String? = "",
-    val voteAverage: Float? = 0F,
-    val adult: Boolean? = false,
-    val voteCount: Int? = 0,
-    val releaseDate: String? = "",
-    val genreIDS: String?= ""
+    val title: String,
+    val overview: String,
+    val posterPath: String,
+    val backdropPath: String,
+    val voteAverage: Float,
+    val adult: Boolean,
+    val voteCount: Int,
+    val releaseDate: String,
+    val genreIDS: String
 )
 
 fun MovieEntity.toDomainModel(genres: List<Genre>): Movie {
@@ -39,7 +39,7 @@ fun MovieEntity.toDomainModel(genres: List<Genre>): Movie {
         voteCount = this.voteCount ?: 0,
         releaseDate = this.releaseDate ?: "",
 
-        genres = if (this.genreIDS == null || genresMap.isEmpty()) {
+        genres = if (genresMap.isEmpty()) {
             emptyList()
         } else {
             this.genreIDS.split(",")
