@@ -12,3 +12,5 @@ const val BASE_URL_POSTER_IMAGE = "https://image.tmdb.org/t/p/w300"
 const val BASE_URL_ACTOR_IMAGE = "https://image.tmdb.org/t/p/w185"
 
 const val DATABASE_NAME = "academy_db"
+
+const val MOVIES_UPDATE_INTERVAL: Long = 8

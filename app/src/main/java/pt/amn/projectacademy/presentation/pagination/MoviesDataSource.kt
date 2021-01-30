@@ -1,8 +1,9 @@
 package pt.amn.projectacademy.presentation.pagination
 
-import android.util.Log
+import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
 import kotlinx.coroutines.*
+import pt.amn.projectacademy.di.MainApplication
 import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.domain.usecases.GetMovieListUseCase
 
@@ -34,14 +35,12 @@ class MoviesDataSource(
         scope.launch {
             interactor.execute(page)
                 .also { result ->
-                    when (result) {
-                        is GetMovieListUseCase.Result.Success ->
-                            callback(result.data)
-                        is GetMovieListUseCase.Result.Error -> {
-                            Log.e(MoviesDataSource::class.java.simpleName, "An error happened: $result")
-                            callback(emptyList())
-                        }
+                    if(result.isError) {
+                        Toast.makeText(
+                            MainApplication.applicationContext(),
+                            result.description, Toast.LENGTH_LONG).show()
                     }
+                    callback(result.dataList)
                 }
         }
     }

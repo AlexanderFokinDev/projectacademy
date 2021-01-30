@@ -1,7 +1,7 @@
 package pt.amn.projectacademy.domain.models
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import pt.amn.projectacademy.domain.domain.Genre
 
 @Parcelize

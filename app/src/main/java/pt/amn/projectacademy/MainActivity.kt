@@ -2,6 +2,7 @@ package pt.amn.projectacademy
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import pt.amn.projectacademy.di.MainApplication
 import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.presentation.FragmentMoviesDetails
 import pt.amn.projectacademy.presentation.FragmentMoviesList
@@ -12,6 +13,10 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.MoviesListFragmentC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        /*Перестал работать ApplicationContext, пришлось такой костыль делать.
+        Перепробовал кучу способов из интернета, не помогало*/
+        MainApplication.setContext(applicationContext)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

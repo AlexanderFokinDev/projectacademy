@@ -1,6 +1,5 @@
 package pt.amn.projectacademy.data.repositories
 
-import android.util.Log
 import pt.amn.projectacademy.data.local.AppDatabase
 import pt.amn.projectacademy.data.local.toDomainModel
 import pt.amn.projectacademy.data.local.toEntityModel
@@ -10,6 +9,7 @@ import pt.amn.projectacademy.domain.domain.Actor
 import pt.amn.projectacademy.domain.domain.Genre
 import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.domain.repositories.MoviesRepository
+import timber.log.Timber
 import java.io.IOException
 
 class MoviesRepositoryImpl(
@@ -17,89 +17,119 @@ class MoviesRepositoryImpl(
     private val database: AppDatabase
 ) : MoviesRepository {
 
-    override suspend fun getPopularMovies(page: Int, genres: List<Genre>): List<Movie> {
+    override suspend fun getPopularMovies(page: Int, genres: List<Genre>): Result<Movie> {
 
-        /** Сначала получаем данные из локальной БД SQLite.
-         *  Затем делаем запрос по Api, если оишбок при получении данных не будет, то
-         *  на UI попадут данные из API. Если данные получить не удастся (например, Wifi отключен),
-         *  то на UI попадут фильмы из локальной БД.
-         */
-        var movieList: List<Movie> = database.movieDao().getAll()
-            .map { movieEntity ->
-                movieEntity.toDomainModel(genres)
-            }
-
-        try {
-            movieList = service.getPopularMoviesAsync(page)
-                .results
-                .map { movieDataModel ->
-                    movieDataModel.toDomainModel(genres)
-                }
-
-            database.movieDao().insertAll(
-                movieList.map { movie ->
-                    movie.toEntityModel()
-                }
-            )
-
+        return try {
+            val movieList = fetchMoviesFromNetwork(page, genres)
+            saveMoviesInDatabase(movieList)
+            Result(false, movieList)
         } catch (e: IOException) {
-            Log.e(MoviesRepositoryImpl::class.java.simpleName, "An error happened: $e")
+            Timber.d("%s An error happened: $e", MoviesRepositoryImpl::class.java.simpleName)
+            Result(true, fetchMoviesFromDatabase(genres), "Network data not available")
         }
 
-        return movieList
     }
 
-    override suspend fun getGenres(): List<Genre> {
+    override suspend fun getGenres(): Result<Genre> {
 
-        var genres: List<Genre> = database.genreDao().getAll()
+        return try {
+            val genres = fetchGenresFromNetwork()
+            saveGenresInDatabase(genres)
+            Result(false, genres)
+        } catch (e: IOException) {
+            Timber.d("%s An error happened: $e", MoviesRepositoryImpl::class.java.simpleName)
+            Result(true, fetchGenresFromDatabase(), "Network data not available")
+        }
+
+    }
+
+    override suspend fun getMovieActors(movieId: Int): Result<Actor> {
+
+        return try {
+            val actors = fetchActorsFromNetwork(movieId)
+            saveActorsInDatabase(actors)
+            Result(false, actors)
+        } catch (e: IOException) {
+            Timber.d("%s An error happened: $e", MoviesRepositoryImpl::class.java.simpleName)
+            Result(true, fetchActorsFromDatabase(), "Network data not available")
+        }
+
+    }
+
+    private suspend fun fetchGenresFromDatabase() : List<Genre> {
+        return database.genreDao().getAll()
             .map { genreEntity ->
                 genreEntity.toDomainModel()
             }
-
-        try {
-            genres = service.getGenresAsync()
-                .genres
-                .map { genreDataModel ->
-                    genreDataModel.toDomainModel()
-                }
-
-            database.genreDao().insertAll(
-                genres.map { genre ->
-                    genre.toEntityModel()
-                }
-            )
-        } catch (e: IOException) {
-            Log.e(MoviesRepositoryImpl::class.java.simpleName, "An error happened: $e")
-        }
-
-        return genres
     }
 
-    override suspend fun getMovieActors(movieId: Int): List<Actor> {
-
-        var actors: List<Actor> = database.actorDao().getAll()
+    private suspend fun fetchActorsFromDatabase() : List<Actor> {
+        return database.actorDao().getAll()
             .map { actorEntity ->
                 actorEntity.toDomainModel()
             }
-
-        try {
-            actors = service.getMovieActorsAsync(movieId)
-                .cast
-                .map { actorDataModel ->
-                    actorDataModel.toDomainModel()
-                }
-
-            database.actorDao().insertAll(
-                actors.map { actor ->
-                    actor.toEntityModel()
-                }
-            )
-        } catch (e: IOException) {
-            Log.e(MoviesRepositoryImpl::class.java.simpleName, "An error happened: $e")
-        }
-
-        return actors
     }
 
+    private suspend fun fetchMoviesFromDatabase(genres: List<Genre>) : List<Movie> {
+        return database.movieDao().getAll()
+            .map { movieEntity ->
+                movieEntity.toDomainModel(genres)
+            }
+    }
+
+    private suspend fun fetchGenresFromNetwork() : List<Genre> {
+        return service.getGenresAsync()
+            .genres
+            .map { genreDataModel ->
+                genreDataModel.toDomainModel()
+            }
+    }
+
+    private suspend fun fetchActorsFromNetwork(movieId: Int) : List<Actor> {
+        return service.getMovieActorsAsync(movieId)
+            .cast
+            .map { actorDataModel ->
+                actorDataModel.toDomainModel()
+            }
+    }
+
+    private suspend fun fetchMoviesFromNetwork(page: Int, genres: List<Genre>) : List<Movie> {
+        return service.getPopularMoviesAsync(page)
+            .results
+            .map { movieDataModel ->
+                movieDataModel.toDomainModel(genres)
+            }
+    }
+
+    private suspend fun saveGenresInDatabase(genres: List<Genre>) {
+        database.genreDao().insertAll(
+            genres.map { genre ->
+                genre.toEntityModel()
+            }
+        )
+    }
+
+    private suspend fun saveActorsInDatabase(actors: List<Actor>) {
+        database.actorDao().insertAll(
+            actors.map { actor ->
+                actor.toEntityModel()
+            }
+        )
+    }
+
+    private suspend fun saveMoviesInDatabase(movies: List<Movie>) {
+        database.movieDao().insertAll(
+            movies.map { movie ->
+                movie.toEntityModel()
+            }
+        )
+    }
+
+}
+
+class Result<T>(
+    var isError: Boolean,
+    var dataList: List<T>,
+    var description: String="") {
 }
 
