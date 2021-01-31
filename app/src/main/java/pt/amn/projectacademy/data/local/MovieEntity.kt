@@ -30,14 +30,14 @@ fun MovieEntity.toDomainModel(genres: List<Genre>): Movie {
 
     return Movie(
         id = this.id,
-        title = this.title ?: "",
-        overview = this.overview ?: "",
-        poster = this.posterPath ?: "",
-        backdrop = this.backdropPath ?: "",
-        ratings = this.voteAverage ?: 0F,
-        adult = this.adult ?: false,
-        voteCount = this.voteCount ?: 0,
-        releaseDate = this.releaseDate ?: "",
+        title = this.title,
+        overview = this.overview,
+        poster = this.posterPath,
+        backdrop = this.backdropPath,
+        ratings = this.voteAverage,
+        adult = this.adult,
+        voteCount = this.voteCount,
+        releaseDate = this.releaseDate,
 
         genres = if (genresMap.isEmpty()) {
             emptyList()

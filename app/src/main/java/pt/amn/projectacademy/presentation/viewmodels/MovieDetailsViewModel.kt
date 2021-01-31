@@ -1,5 +1,6 @@
 package pt.amn.projectacademy.presentation.viewmodels
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,11 +20,10 @@ class MovieDetailsViewModel(movieId: Int) : ViewModel() {
         MutableLiveData<List<Actor>>().also { itList ->
             viewModelScope.launch {
                 interactor.execute(movieId).also { result ->
-                    when (result) {
-                        is GetActorListUseCase.Result.Success ->
-                            itList.value = result.data
-                        is GetActorListUseCase.Result.Error ->
-                            itList.value = emptyList()
+                    itList.value = result.dataList
+                    if(result.isError) {
+                        Toast.makeText(MainApplication.applicationContext(),
+                            result.description, Toast.LENGTH_LONG).show()
                     }
                 }
             }
