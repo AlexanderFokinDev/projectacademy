@@ -39,7 +39,7 @@ fun MovieEntity.toDomainModel(genres: List<Genre>): Movie {
         voteCount = this.voteCount,
         releaseDate = this.releaseDate,
 
-        genres = if (genresMap.isEmpty()) {
+        genres = if (genresMap.isEmpty() || this.genreIDS.isEmpty()) {
             emptyList()
         } else {
             this.genreIDS.split(",")

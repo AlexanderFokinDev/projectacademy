@@ -7,6 +7,7 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import pt.amn.projectacademy.data.models.MovieDataModel
 import pt.amn.projectacademy.data.retrofit.response.ActorsListResponse
 import pt.amn.projectacademy.data.retrofit.response.GenresListResponse
 import pt.amn.projectacademy.data.retrofit.response.MoviesListResponse
@@ -24,8 +25,8 @@ interface TMDBService {
     @GET("movie/popular")
     suspend fun getPopularMoviesAsync(@Query("page") page: Int) : MoviesListResponse
 
-    /*@GET("movie/{id}")
-    fun getMovieByIdAsync(@Path("id") id: Int): Deferred<Movie>*/
+    @GET("movie/{id}")
+    suspend fun getMovieByIdAsync(@Path("id") id: Int): MovieDataModel
 
     @GET("movie/{movie_id}/credits")
     suspend fun getMovieActorsAsync(@Path("movie_id") id: Int) : ActorsListResponse

@@ -6,14 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.paging.PagedList
+import dagger.hilt.android.AndroidEntryPoint
 import pt.amn.projectacademy.presentation.adapters.MoviesAdapter
 import pt.amn.projectacademy.presentation.adapters.OnRecyclerMovieClicked
 import pt.amn.projectacademy.databinding.FragmentMoviesListBinding
 import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.presentation.viewmodels.MoviesListViewModel
+import pt.amn.projectacademy.presentation.viewmodels.utils.Resource
+import pt.amn.projectacademy.presentation.viewmodels.utils.Status
 
+@AndroidEntryPoint
 class FragmentMoviesList : Fragment() {
 
     private var _binding: FragmentMoviesListBinding? = null
@@ -42,6 +47,10 @@ class FragmentMoviesList : Fragment() {
         viewModel.moviesList.observe(viewLifecycleOwner) { moviesList ->
             updateData(moviesList)
         }
+
+        viewModel.networkState.observe(viewLifecycleOwner) { resultRequest ->
+            showNetworkError(resultRequest)
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -68,6 +77,12 @@ class FragmentMoviesList : Fragment() {
     private val recyclerListener = object : OnRecyclerMovieClicked {
         override fun onClick(movie: Movie) {
             fragmentListener?.cardClick(movie)
+        }
+    }
+
+    private fun showNetworkError(resultRequest: Resource<String>) {
+        if (resultRequest.status == Status.ERROR) {
+            Toast.makeText(requireContext(), resultRequest.message, Toast.LENGTH_LONG).show()
         }
     }
 

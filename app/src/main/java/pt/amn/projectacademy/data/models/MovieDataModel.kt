@@ -13,7 +13,10 @@ data class MovieDataModel (
     val backdropPath: String? = "",
 
     @SerialName("genre_ids")
-    val genreIDS: List<Int>,
+    val genreIDS: List<Int>? = null,
+
+    @SerialName("genres")
+    val genres: List<GenreDataModel>? = null,
 
     val id: Int,
 
@@ -46,6 +49,19 @@ fun MovieDataModel.toDomainModel(genres: List<Genre>): Movie {
             genre -> genre.id
     }
 
+    val genreIDS = mutableListOf<Int>()
+    if (this.genres != null) {
+        for(genre in this.genres) {
+            genreIDS.add(genre.id)
+        }
+    }
+    if(this.genreIDS != null) {
+        for(genre in this.genreIDS) {
+            genreIDS.add(genre)
+        }
+    }
+
+
     return Movie(
         id = this.id,
         title = this.title ?: "",
@@ -56,7 +72,7 @@ fun MovieDataModel.toDomainModel(genres: List<Genre>): Movie {
         adult = this.adult ?: false,
         voteCount = this.voteCount ?: 0,
         releaseDate = this.releaseDate ?: "",
-        genres = this.genreIDS.map {
+        genres = genreIDS.map {
             genresMap[it] ?: throw IllegalArgumentException("Genre not found")
         }
     )

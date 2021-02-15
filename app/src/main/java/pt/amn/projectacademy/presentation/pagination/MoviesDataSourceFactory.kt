@@ -10,7 +10,7 @@ class MoviesDataSourceFactory(
     private val scope: CoroutineScope, private val interactor: GetMovieListUseCase
     ): DataSource.Factory<Int, Movie>() {
 
-    private val sourceLiveData = MutableLiveData<MoviesDataSource>()
+    val sourceLiveData = MutableLiveData<MoviesDataSource>()
 
     override fun create(): DataSource<Int, Movie> {
         val source = MoviesDataSource(scope, interactor)

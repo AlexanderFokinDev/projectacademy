@@ -1,15 +1,18 @@
 package pt.amn.projectacademy.presentation.pagination
 
-import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import kotlinx.coroutines.*
-import pt.amn.projectacademy.di.MainApplication
 import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.domain.usecases.GetMovieListUseCase
+import pt.amn.projectacademy.presentation.viewmodels.utils.Resource
 
 class MoviesDataSource(
     private val scope: CoroutineScope, private val interactor: GetMovieListUseCase
     ): PageKeyedDataSource<Int, Movie>() {
+
+    private val networkState = MutableLiveData<Resource<String>>()
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -36,13 +39,17 @@ class MoviesDataSource(
             interactor.execute(page)
                 .also { result ->
                     if(result.isError) {
-                        Toast.makeText(
-                            MainApplication.applicationContext(),
-                            result.description, Toast.LENGTH_LONG).show()
+                        networkState.postValue(Resource.error(result.description,"error"))
+                    } else {
+                        networkState.postValue(Resource.success("success"))
                     }
                     callback(result.dataList)
                 }
         }
+    }
+
+    fun getNetworkState() : LiveData<Resource<String>> {
+        return networkState
     }
 
     companion object {

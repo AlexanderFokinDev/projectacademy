@@ -1,4 +1,4 @@
-package pt.amn.projectacademy
+package pt.amn.projectacademy.utils
 
 import android.view.View
 import android.widget.ImageView
