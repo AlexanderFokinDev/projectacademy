@@ -26,11 +26,13 @@ class UpdateMoviesWorkerTest {
     @Test
     fun testWork() {
 
-        //val worker = TestListenableWorkerBuilder<UpdateMoviesWorker>(context).build()
 
-        //val result = worker.startWork().get()
 
-        //assertThat(result, `is`(Result.success()))
+//        val worker = TestListenableWorkerBuilder<UpdateMoviesWorker>(context).build()
+//
+//        val result = worker.startWork().get()
+//
+//        assertThat(result, `is`(Result.success()))
 
         /*val constraints = Constraints.Builder()
             .setRequiresCharging(true)

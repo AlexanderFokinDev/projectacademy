@@ -10,6 +10,7 @@ import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.domain.repositories.MoviesRepository
 import pt.amn.projectacademy.domain.usecases.GetActorListUseCase
 import pt.amn.projectacademy.domain.usecases.GetMovieUseCase
+import pt.amn.projectacademy.domain.usecases.PreferencesUseCase
 import pt.amn.projectacademy.presentation.viewmodels.utils.Resource
 
 class MovieDetailsViewModel @AssistedInject constructor(
@@ -19,6 +20,10 @@ class MovieDetailsViewModel @AssistedInject constructor(
 
     private val interactorActors = GetActorListUseCase(repository)
     private val interactorMovie = GetMovieUseCase(repository)
+    private val interactorPreferences = PreferencesUseCase(repository)
+
+    var isRationaleCalendarShown = false
+
 
     // Недоступные вне класса изменяемые данные. Можно менять их только внутри этого класса
     private val _mutableMovie: MutableLiveData<Resource<Movie>> by lazy {
@@ -58,6 +63,14 @@ class MovieDetailsViewModel @AssistedInject constructor(
     // хранящиеся внутри данные нельзя
     val movie: LiveData<Resource<Movie>> get() = _mutableMovie
     val actorsList: LiveData<Resource<List<Actor>>> get() = _mutableActorsList
+
+    fun savePreferencesData() {
+        interactorPreferences.saveCalendarRational(isRationaleCalendarShown)
+    }
+
+    fun restorePreferencesData() {
+        isRationaleCalendarShown = interactorPreferences.getCalendarRational()
+    }
 
     @AssistedFactory
     interface MovieDetailsViewModelFactory {

@@ -109,4 +109,6 @@ dependencies {
     testImplementation 'com.google.dagger:hilt-android-testing:2.28.3-alpha'
     kaptTest 'com.google.dagger:hilt-android-compiler:2.31.2-alpha'
 
+    implementation 'com.karumi:dexter:6.2.2'
+
 }

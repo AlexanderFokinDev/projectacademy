@@ -49,18 +49,10 @@ fun MovieDataModel.toDomainModel(genres: List<Genre>): Movie {
             genre -> genre.id
     }
 
-    val genreIDS = mutableListOf<Int>()
-    if (this.genres != null) {
-        for(genre in this.genres) {
-            genreIDS.add(genre.id)
-        }
-    }
+    var genreIDS = listOf<Int>()
     if(this.genreIDS != null) {
-        for(genre in this.genreIDS) {
-            genreIDS.add(genre)
-        }
+        genreIDS = this.genreIDS
     }
-
 
     return Movie(
         id = this.id,

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import pt.amn.projectacademy.databinding.ViewHolderMovieBinding
 import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.utils.BASE_URL_POSTER_IMAGE
+import pt.amn.projectacademy.utils.loadImage
 
 class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
     : PagedListAdapter<Movie, MoviesAdapter.MoviesViewHolder>(MOVIE_COMPARATOR) {
@@ -19,14 +20,9 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
 
-        val movie = getItem(position);
+        val movie = getItem(position)
         if (movie != null) {
             holder.onBind(movie, listener)
-        } else {
-            // Null defines a placeholder item - PagedListAdapter will automatically invalidate
-            // this row when the actual object is loaded from the database
-            // т. е. в этот момент данные еще недоступны, можно сделать какую-то карточку заглушку
-            // с фразой  Waiting... например
         }
 
     }

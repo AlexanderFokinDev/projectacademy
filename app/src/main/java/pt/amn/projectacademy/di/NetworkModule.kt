@@ -13,7 +13,6 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideTMDBService() : TMDBService {
-        return TMDBService.create()
-    }
+    fun provideTMDBService(): TMDBService = TMDBService.create()
+
 }
