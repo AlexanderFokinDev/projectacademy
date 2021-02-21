@@ -32,5 +32,7 @@
     <string name="permission_write_calendar_dialog_denied_text">This feature is not available without write calendar permissions. Open app settings?</string>
     <string name="dialog_positive_button">OK</string>
     <string name="dialog_negative_button">Cancel</string>
+    <string name="permissions_title_calendar">Calendar permission</string>
+    <string name="permission_message_calendar"><![CDATA[Read & write calendar permissions are needed for planning a movie watch]]></string>
 
 </resources>

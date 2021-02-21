@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import pt.amn.projectacademy.data.local.AppPreferences
 import javax.inject.Singleton
 
 @Module
@@ -17,6 +18,12 @@ class PreferencesModule {
     @Provides
     fun provideSharedPreferences(@ApplicationContext context: Context) : SharedPreferences {
         return context.getSharedPreferences(PERSISTANCE_STORAGE_NAME, Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAppPreferences(sharedPreferences: SharedPreferences) : AppPreferences {
+        return AppPreferences(sharedPreferences)
     }
 
     companion object {

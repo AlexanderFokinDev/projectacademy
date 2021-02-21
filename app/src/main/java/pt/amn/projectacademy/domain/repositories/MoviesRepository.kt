@@ -17,4 +17,8 @@ interface MoviesRepository {
 
     suspend fun getTopRatedMovie(genres: List<Genre>) : Result<Movie>
 
+    fun saveCalendarRational(isRationaleCalendarShown: Boolean)
+
+    fun getCalendarRational() : Boolean
+
 }

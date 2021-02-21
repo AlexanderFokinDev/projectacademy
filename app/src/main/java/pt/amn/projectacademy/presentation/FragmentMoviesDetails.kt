@@ -3,7 +3,6 @@ package pt.amn.projectacademy.presentation
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -13,12 +12,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import pt.amn.projectacademy.R
 import pt.amn.projectacademy.presentation.adapters.ActorsAdapter
@@ -44,15 +46,8 @@ class FragmentMoviesDetails : Fragment() {
     private var listener : MovieDetailsFragmentClicks? = null
     private val adapter : ActorsAdapter = ActorsAdapter()
 
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
-    private var isRationaleReadCalendarShown = false
-    private var isRationaleWriteCalendarShown = false
-
     @Inject
     lateinit var movieDetailsViewModelFactory:  MovieDetailsViewModelFactory
-
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
 
     private val viewModel: MovieDetailsViewModel by viewModels {
         MovieDetailsViewModel.provideFactory(movieDetailsViewModelFactory,
@@ -71,89 +66,97 @@ class FragmentMoviesDetails : Fragment() {
 
         restorePreferencesData()
 
-        binding.rvActors.adapter = adapter
+        binding.run {
 
-        binding.tvPath.setOnClickListener {
-            listener?.backClick()
-        }
+            rvActors.adapter = adapter
 
-        binding.ivSchedule.setOnClickListener {
-
-            var readPermissionGranted = false
-            when {
-                ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_CALENDAR
-                ) == PackageManager.PERMISSION_GRANTED -> readPermissionGranted = true
-
-                shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ->
-                    showReadCalendarPermissionExplanationDialog()
-
-                isRationaleReadCalendarShown -> showReadCalendarPermissionDeniedDialog()
-
-                else -> requestReadCalendarPermission()
+            tvPath.setOnClickListener {
+                listener?.backClick()
             }
 
-            if (readPermissionGranted) {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.WRITE_CALENDAR
-                    ) == PackageManager.PERMISSION_GRANTED -> onReadWriteCalendarPermissionGranted()
+            ivSchedule.setOnClickListener {
 
-                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR) ->
-                        showWriteCalendarPermissionExplanationDialog()
+                if (calendarPermissionsGranted()) {
+                    onReadWriteCalendarPermissionGranted()
+                } else {
 
-                    isRationaleWriteCalendarShown -> showWriteCalendarPermissionDeniedDialog()
+                    Dexter.withContext(requireContext())
+                        .withPermissions(
+                            Manifest.permission.READ_CALENDAR,
+                            Manifest.permission.WRITE_CALENDAR
+                        )
+                        .withListener(object : MultiplePermissionsListener {
 
-                    else -> {
-                        requestWriteCalendarPermission()
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                                if (report?.areAllPermissionsGranted() == true) {
+                                    onReadWriteCalendarPermissionGranted()
+                                } else {
+                                    if (report?.isAnyPermissionPermanentlyDenied == true
+                                        && !viewModel.isRationaleCalendarShown
+                                    ) {
+                                        showCalendarPermissionDeniedDialog()
+                                        viewModel.isRationaleCalendarShown = true
+                                        savePreferencesData()
+                                    }
+                                }
+                            }
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: MutableList<PermissionRequest>?,
+                                token: PermissionToken?
+                            ) {
+                                token?.continuePermissionRequest()
+                            }
+
+                        })
+                        .check()
+                }
+
+            }
+
+            viewModel.movie.observe(viewLifecycleOwner, Observer { resMovie ->
+                when (resMovie.status) {
+                    Status.SUCCESS -> {
+                        if (resMovie.data != null) {
+                            resMovie.data.run {
+                                tvName.text = title
+                                tvStoryline.text = overview
+                                tvTag.text = getTag()
+                                tvReview.text = getReview()
+                                tvAge.text = getMinimumAge()
+                                ratingBar.rating = getRating()
+                                ivBackground.loadImage(
+                                    root,
+                                    BASE_URL_BACKDROP_IMAGE + backdrop
+                                )
+                            }
+                        } else
+                            throw IllegalArgumentException("Movie not found")
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(requireContext(), resMovie.message, Toast.LENGTH_LONG).show()
+                    }
+                    Status.LOADING -> {
                     }
                 }
-            }
+            })
+
+            viewModel.actorsList.observe(viewLifecycleOwner, Observer { resActors ->
+                when (resActors.status) {
+                    Status.SUCCESS -> {
+                        // load the list of actors
+                        updateData(resActors.data ?: emptyList())
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(requireContext(), resActors.message, Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            })
 
         }
-
-        viewModel.movie.observe(viewLifecycleOwner, Observer { resMovie ->
-            when(resMovie.status) {
-                Status.SUCCESS -> {
-                    if(resMovie.data != null) {
-                        resMovie.data.run {
-                            binding.tvName.text = title
-                            binding.tvStoryline.text = overview
-                            binding.tvTag.text = getTag()
-                            binding.tvReview.text = getReview()
-                            binding.tvAge.text = getMinimumAge()
-                            binding.ratingBar.rating = getRating()
-                            binding.ivBackground.loadImage(
-                                binding.root,
-                                BASE_URL_BACKDROP_IMAGE + backdrop
-                            )
-                        }
-                    } else
-                        throw IllegalArgumentException("Movie not found")
-                }
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), resMovie.message, Toast.LENGTH_LONG).show()
-                }
-                Status.LOADING -> {
-                }
-            }
-        })
-
-        viewModel.actorsList.observe(viewLifecycleOwner, Observer { resActors ->
-            when(resActors.status) {
-                Status.SUCCESS -> {
-                    // load the list of actors
-                    updateData(resActors.data ?: emptyList())
-                }
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), resActors.message, Toast.LENGTH_LONG).show()
-                }
-                Status.LOADING -> {
-                }
-            }
-        })
 
     }
 
@@ -162,22 +165,12 @@ class FragmentMoviesDetails : Fragment() {
         if (context is MovieDetailsFragmentClicks) {
             listener = context
         }
-
-        requestPermissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                onReadWriteCalendarPermissionGranted()
-            } else {
-                onReadWriteCalendarPermissionNotGranted()
-            }
-        }
     }
 
     override fun onDetach() {
         super.onDetach()
         listener = null
-        requestPermissionLauncher.unregister()
+        //requestPermissionLauncher.unregister()
     }
 
     override fun onDestroyView() {
@@ -186,127 +179,52 @@ class FragmentMoviesDetails : Fragment() {
         super.onDestroyView()
     }
 
-    private fun requestReadCalendarPermission() {
-        context?.let {
-            requestPermissionLauncher.launch(Manifest.permission.READ_CALENDAR)
-        }
-    }
-
-    private fun requestWriteCalendarPermission() {
-        context?.let {
-            requestPermissionLauncher.launch(Manifest.permission.WRITE_CALENDAR)
-        }
-    }
-
     private fun onReadWriteCalendarPermissionGranted() {
-        context?.let {
-            val calendar = CalendarHelper(requireContext())
-            val calendarId = calendar.getCalendarId()
+        val calendar = CalendarHelper(requireContext())
+        val calendarId = calendar.getCalendarId()
 
-            if (calendarId != null) {
-                calendar.pickDate(binding.tvName.text.toString())
+        if (calendarId != null) {
+            calendar.pickDate(binding.tvName.text.toString())
+        }
+    }
+
+    private fun showCalendarPermissionDeniedDialog() {
+
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.permission_read_calendar_dialog_denied_text)
+            .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
+                startActivity(
+                    Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + requireContext().packageName)
+                    )
+                )
+                dialog.dismiss()
             }
-        }
-    }
-
-    private fun onReadWriteCalendarPermissionNotGranted() {
-        context?.let {
-            Toast.makeText(context, R.string.permission_read_write_calendar_not_granted_text,
-                Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun showReadCalendarPermissionExplanationDialog() {
-        context?.let {
-            AlertDialog.Builder(it)
-                .setMessage(R.string.permission_read_calendar_dialog_explanation_text)
-                .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
-                    isRationaleReadCalendarShown = true
-                    requestReadCalendarPermission()
-                    dialog.dismiss()
-                }
-                .setNegativeButton(R.string.dialog_negative_button) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
-    }
-
-    private fun showWriteCalendarPermissionExplanationDialog() {
-        context?.let {
-            AlertDialog.Builder(it)
-                .setMessage(R.string.permission_write_calendar_dialog_explanation_text)
-                .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
-                    isRationaleWriteCalendarShown = true
-                    requestWriteCalendarPermission()
-                    dialog.dismiss()
-                }
-                .setNegativeButton(R.string.dialog_negative_button) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
-    }
-
-    private fun showReadCalendarPermissionDeniedDialog() {
-        context?.let {
-            AlertDialog.Builder(it)
-                .setMessage(R.string.permission_read_calendar_dialog_denied_text)
-                .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
-                    startActivity(
-                        Intent(
-                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.parse("package:" + it.packageName)
-                        )
-                    )
-                    dialog.dismiss()
-                }
-                .setNegativeButton(R.string.dialog_negative_button) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
-    }
-
-    private fun showWriteCalendarPermissionDeniedDialog() {
-        context?.let {
-            AlertDialog.Builder(it)
-                .setMessage(R.string.permission_write_calendar_dialog_denied_text)
-                .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
-                    startActivity(
-                        Intent(
-                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.parse("package:" + it.packageName)
-                        )
-                    )
-                    dialog.dismiss()
-                }
-                .setNegativeButton(R.string.dialog_negative_button) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        }
+            .setNegativeButton(R.string.dialog_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun savePreferencesData() {
-        activity?.let {
-            sharedPreferences.edit()
-                .putBoolean(KEY_READ_CALENDAR_PERMISSION_RATIONALE_SHOWN, isRationaleReadCalendarShown)
-                .putBoolean(KEY_WRITE_CALENDAR_PERMISSION_RATIONALE_SHOWN, isRationaleWriteCalendarShown)
-                .apply()
-        }
+        viewModel.savePreferencesData()
     }
 
     private fun restorePreferencesData() {
-        isRationaleReadCalendarShown = sharedPreferences.getBoolean(
-            KEY_READ_CALENDAR_PERMISSION_RATIONALE_SHOWN,
-            false
-        ) ?: false
+        viewModel.restorePreferencesData()
+    }
 
-        isRationaleWriteCalendarShown = sharedPreferences.getBoolean(
-            KEY_WRITE_CALENDAR_PERMISSION_RATIONALE_SHOWN,
-            false
-        ) ?: false
+    private fun calendarPermissionsGranted() : Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.READ_CALENDAR
+        ) == PackageManager.PERMISSION_GRANTED
+                &&
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_CALENDAR
+                ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun updateData(actorsList: List<Actor>) {
@@ -315,10 +233,6 @@ class FragmentMoviesDetails : Fragment() {
     }
 
     companion object {
-
-        private const val KEY_READ_CALENDAR_PERMISSION_RATIONALE_SHOWN = "KEY_READ_CALENDAR_PERMISSION_RATIONALE_SHOWN_APP"
-        private const val KEY_WRITE_CALENDAR_PERMISSION_RATIONALE_SHOWN = "KEY_WRITE_CALENDAR_PERMISSION_RATIONALE_SHOWN_APP"
-
         /** @return A new instance of fragment FragmentMoviesDetails.*/
         @JvmStatic
         fun newInstance(movieId : Int) = FragmentMoviesDetails().apply {
