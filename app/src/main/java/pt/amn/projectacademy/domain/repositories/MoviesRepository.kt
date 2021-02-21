@@ -13,4 +13,8 @@ interface MoviesRepository {
 
     suspend fun getMovieActors(movieId: Int) : Result<Actor>
 
+    suspend fun getMovie(movieId: Int, genres: List<Genre>) : Result<Movie>
+
+    suspend fun getTopRatedMovie(genres: List<Genre>) : Result<Movie>
+
 }

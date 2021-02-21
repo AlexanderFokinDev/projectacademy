@@ -20,7 +20,7 @@ class GetMovieListUseCase(private val repository: MoviesRepository) {
             try {
                 genres = repository.getGenres().dataList
             } catch (e: IOException) {
-                Timber.d("%s An error happened: $e", GetMovieListUseCase::class.java.simpleName)
+                Timber.d("getGenres. An error happened: $e")
             }
         }
         return genres ?: emptyList()

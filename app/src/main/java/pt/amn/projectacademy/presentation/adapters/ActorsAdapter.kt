@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import pt.amn.projectacademy.databinding.ViewHolderActorBinding
-import pt.amn.projectacademy.loadImage
+import pt.amn.projectacademy.utils.loadImage
 import pt.amn.projectacademy.domain.domain.Actor
 import pt.amn.projectacademy.utils.BASE_URL_ACTOR_IMAGE
 

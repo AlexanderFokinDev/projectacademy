@@ -11,8 +11,11 @@ import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.domain.repositories.MoviesRepository
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MoviesRepositoryImpl(
+@Singleton
+class MoviesRepositoryImpl @Inject constructor(
     private val service: TMDBService,
     private val database: AppDatabase
 ) : MoviesRepository {
@@ -24,7 +27,7 @@ class MoviesRepositoryImpl(
             saveMoviesInDatabase(movieList)
             Result(false, movieList)
         } catch (e: IOException) {
-            Timber.d("%s An error happened: $e", MoviesRepositoryImpl::class.java.simpleName)
+            Timber.d("getPopularMovies. An error happened: $e")
             Result(true, fetchMoviesFromDatabase(genres), "Network data not available")
         }
 
@@ -37,7 +40,7 @@ class MoviesRepositoryImpl(
             saveGenresInDatabase(genres)
             Result(false, genres)
         } catch (e: IOException) {
-            Timber.d("%s An error happened: $e", MoviesRepositoryImpl::class.java.simpleName)
+            Timber.d("getGenres. An error happened: $e")
             Result(true, fetchGenresFromDatabase(), "Network data not available")
         }
 
@@ -50,8 +53,34 @@ class MoviesRepositoryImpl(
             saveActorsInDatabase(actors)
             Result(false, actors)
         } catch (e: IOException) {
-            Timber.d("%s An error happened: $e", MoviesRepositoryImpl::class.java.simpleName)
+            Timber.d("getMovieActors. An error happened: $e")
             Result(true, fetchActorsFromDatabase(), "Network data not available")
+        }
+
+    }
+
+    override suspend fun getMovie(movieId: Int, genres: List<Genre>): Result<Movie> {
+
+        return try {
+            val movie = fetchMovieFromNetwork(movieId, genres)
+            saveMovieInDatabase(movie)
+            Result(false, listOf(movie))
+        } catch (e: IOException) {
+            Timber.d("getMovie. An error happened: $e")
+            Result(true, fetchMovieFromDatabase(movieId, genres),
+                "Network data not available")
+        }
+
+    }
+
+    override suspend fun getTopRatedMovie(genres: List<Genre>): Result<Movie> {
+
+        return try {
+            Result(false, listOf(getTopRatedFromDatabase(genres)))
+        } catch (e: IOException) {
+            Timber.d("getTopRatedMovie. An error happened: $e")
+            Result(true, emptyList(),
+                "getTopRatedMovie. An error happened")
         }
 
     }
@@ -75,6 +104,14 @@ class MoviesRepositoryImpl(
             .map { movieEntity ->
                 movieEntity.toDomainModel(genres)
             }
+    }
+
+    private suspend fun fetchMovieFromDatabase(movieId: Int, genres: List<Genre>) : List<Movie> {
+        return listOf(database.movieDao().getById(movieId).toDomainModel(genres))
+    }
+
+    private suspend fun getTopRatedFromDatabase(genres: List<Genre>) : Movie {
+        return database.movieDao().getTopRated().toDomainModel(genres)
     }
 
     private suspend fun fetchGenresFromNetwork() : List<Genre> {
@@ -101,6 +138,11 @@ class MoviesRepositoryImpl(
             }
     }
 
+    private suspend fun fetchMovieFromNetwork(movieId: Int, genres: List<Genre>) : Movie {
+        return service.getMovieByIdAsync(movieId)
+            .toDomainModel(genres)
+    }
+
     private suspend fun saveGenresInDatabase(genres: List<Genre>) {
         database.genreDao().insertAll(
             genres.map { genre ->
@@ -123,6 +165,10 @@ class MoviesRepositoryImpl(
                 movie.toEntityModel()
             }
         )
+    }
+
+    private suspend fun saveMovieInDatabase(movie: Movie) {
+        database.movieDao().insert(movie.toEntityModel())
     }
 
 }

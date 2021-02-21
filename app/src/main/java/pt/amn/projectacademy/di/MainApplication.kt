@@ -1,66 +1,54 @@
 package pt.amn.projectacademy.di
 
 import android.app.Application
-import android.content.Context
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import pt.amn.projectacademy.data.local.AppDatabase
-import pt.amn.projectacademy.data.repositories.MoviesRepositoryImpl
-import pt.amn.projectacademy.data.retrofit.service.TMDBService
-import pt.amn.projectacademy.domain.repositories.MoviesRepository
+import android.util.Log
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.*
+import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.qualifiers.ApplicationContext
+import pt.amn.projectacademy.BuildConfig
 import pt.amn.projectacademy.utils.MOVIES_UPDATE_INTERVAL
 import pt.amn.projectacademy.workers.UpdateMoviesWorker
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class MainApplication : Application() {
+@HiltAndroidApp
+class MainApplication : Application(), Configuration.Provider {
 
-    init {
-        instance = this
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun onCreate() {
+        super.onCreate()
+
+        if(BuildConfig.DEBUG){
+            Timber.plant(Timber.DebugTree());
+        }
+
+        startUpdateMoviesWorker()
     }
 
-    companion object {
-        private var instance: MainApplication? = null
-        private var repository : MoviesRepository? = null
-        private lateinit var mContext : Context
+    private fun startUpdateMoviesWorker() {
 
-        fun applicationContext() : Context {
-            return mContext
-        }
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true)
+            .setRequiredNetworkType(NetworkType.UNMETERED) // Need WiFi
+            .build()
 
-        fun setContext(context: Context) {
-            mContext = context
-            startUpdateMoviesWorker()
-        }
+        val request = PeriodicWorkRequestBuilder<UpdateMoviesWorker>(
+            repeatInterval = MOVIES_UPDATE_INTERVAL, TimeUnit.HOURS)
+            .setConstraints(constraints)
+            .build()
 
-        private fun createRepository() : MoviesRepository {
-            return MoviesRepositoryImpl(
-                TMDBService.create(),
-                AppDatabase.getInstance())
-        }
-
-        fun getRepository() : MoviesRepository {
-            if (repository == null) {
-                repository = createRepository()
-            }
-            return repository as MoviesRepository
-        }
-
-        private fun startUpdateMoviesWorker() {
-
-            val constraints = Constraints.Builder()
-                .setRequiresCharging(true)
-                .setRequiredNetworkType(NetworkType.UNMETERED) // Need WiFi
-                .build()
-
-            val request = PeriodicWorkRequestBuilder<UpdateMoviesWorker>(
-                repeatInterval = MOVIES_UPDATE_INTERVAL, TimeUnit.HOURS)
-                .setConstraints(constraints)
-                .build()
-
-            WorkManager.getInstance(applicationContext()).enqueue(request)
-        }
-
+        WorkManager.getInstance(applicationContext).enqueue(request)
     }
+
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Configuration.Builder()
+            .setMinimumLoggingLevel(Log.VERBOSE)
+            .setWorkerFactory(workerFactory)
+            .build()
+    }
+
 }

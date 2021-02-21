@@ -2,14 +2,12 @@ package pt.amn.projectacademy.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import pt.amn.projectacademy.databinding.ViewHolderMovieBinding
 import pt.amn.projectacademy.domain.models.Movie
 import pt.amn.projectacademy.utils.BASE_URL_POSTER_IMAGE
-import pt.amn.projectacademy.loadImage
 
 class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
     : PagedListAdapter<Movie, MoviesAdapter.MoviesViewHolder>(MOVIE_COMPARATOR) {
@@ -39,7 +37,7 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
         fun onBind(movie: Movie, listener: OnRecyclerMovieClicked) {
             binding.run {
                 tvName.text = movie.title
-                ratingBar.rating = movie.getRating() ?: 0F
+                ratingBar.rating = movie.getRating()
                 tvAge.text = movie.getMinimumAge()
                 tvReleaseDate.text = movie.releaseDate
                 tvReview.text = movie.getReview()

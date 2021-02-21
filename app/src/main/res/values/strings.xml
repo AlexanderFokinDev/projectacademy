@@ -15,10 +15,22 @@
     <string name="movie_name_without_ln">Avengers: End Game</string>
     <string name="movie_tag_example">Action, Adventure, Fantasy</string>
     <string name="movie_review_example">125 Reviews</string>
+    <string name="event_add_to_calendar">Event added to the calendar</string>
 
     <!--Fragment movies list-->
     <string name="title_movies_list">Movies list</string>
     <string name="movie_time_example">137 min</string>
     <string name="title_release_date">Release date:</string>
+
+    <!--Permissions-->
+    <string name="permission_read_calendar_granted_text">READ CALENDAR permission granted</string>
+    <string name="permission_read_calendar_dialog_explanation_text">To continue please grant access to read calendar</string>
+    <string name="permission_read_calendar_dialog_denied_text">This feature is not available without read calendar permissions. Open app settings?</string>
+    <string name="permission_read_write_calendar_not_granted_text">Read and write calendar permissions not granted</string>
+    <string name="permission_write_calendar_granted_text">WRITE CALENDAR permission granted</string>
+    <string name="permission_write_calendar_dialog_explanation_text">To continue please grant access to write calendar</string>
+    <string name="permission_write_calendar_dialog_denied_text">This feature is not available without write calendar permissions. Open app settings?</string>
+    <string name="dialog_positive_button">OK</string>
+    <string name="dialog_negative_button">Cancel</string>
 
 </resources>

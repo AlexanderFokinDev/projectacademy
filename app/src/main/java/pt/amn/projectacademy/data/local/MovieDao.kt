@@ -25,4 +25,8 @@ interface MovieDao {
 
     @Query("SELECT * FROM movies WHERE id = :id")
     suspend fun getById(id: Int): MovieEntity
+
+    @Query("SELECT * from movies ORDER BY voteAverage DESC LIMIT 1")
+    suspend fun getTopRated(): MovieEntity
+
 }
