@@ -1,6 +1,7 @@
 package pt.amn.projectacademy.presentation.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -40,8 +41,10 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
                 tvTag.text = movie.getTag()
                 ivMovie.loadImage(binding.root, BASE_URL_POSTER_IMAGE + movie.poster)
 
+                root.transitionName = PREFIX_TRANSITION_NAME + movie.id
+
                 movieCard.setOnClickListener {
-                    listener.onClick(movie)
+                    listener.onClick(movie, root)
                 }
             }
         }
@@ -49,6 +52,9 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
     }
 
     companion object {
+
+        const val PREFIX_TRANSITION_NAME = "transition_element_"
+
         val MOVIE_COMPARATOR = object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
@@ -62,5 +68,5 @@ class MoviesAdapter(private val listener: OnRecyclerMovieClicked)
 }
 
 interface  OnRecyclerMovieClicked {
-    fun onClick(movie : Movie)
+    fun onClick(movie: Movie, sharedElement: View)
 }

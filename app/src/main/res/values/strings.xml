@@ -22,6 +22,8 @@
     <string name="movie_time_example">137 min</string>
     <string name="title_release_date">Release date:</string>
 
+    <string name="movie_transition_name">movie_transition</string>
+
     <!--Permissions-->
     <string name="permission_read_calendar_granted_text">READ CALENDAR permission granted</string>
     <string name="permission_read_calendar_dialog_explanation_text">To continue please grant access to read calendar</string>

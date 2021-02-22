@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
 import androidx.paging.PagedList
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +42,12 @@ class FragmentMoviesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postponeEnterTransition()
+        view.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
+
         adapter = MoviesAdapter(recyclerListener)
         binding.rvMovies.adapter = adapter
 
@@ -75,8 +82,8 @@ class FragmentMoviesList : Fragment() {
     }
 
     private val recyclerListener = object : OnRecyclerMovieClicked {
-        override fun onClick(movie: Movie) {
-            fragmentListener?.cardClick(movie)
+        override fun onClick(movie: Movie, sharedElement: View) {
+            fragmentListener?.cardClick(movie, sharedElement)
         }
     }
 
@@ -93,6 +100,6 @@ class FragmentMoviesList : Fragment() {
     }
 
     interface MoviesListFragmentClicks {
-        fun cardClick(movie : Movie)
+        fun cardClick(movie : Movie, sharedElement: View)
     }
 }
